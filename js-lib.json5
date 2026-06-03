@@ -1,140 +1,21 @@
 /*
- * Default settings for JS apps in this organization
- * - Sets rules for concurrency, schedule and prioritization
- * - Sets rules for stability requirements
+ * Renovate config for JS libraries in this organization
+ *
+ * Libraries are published for others to consume, so this layers Renovate's
+ * "config:js-lib" preset (widens runtime dependency ranges instead of pinning)
+ * on top of the org-wide and shared JS rules. All concurrency, schedule,
+ * priority, automerge and stability rules live in js-base.json5.
  */
 
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
 
   extends: [
-    // Default configuration from Renovate
+    // Renovate's library preset: widens runtime dependency ranges
     // See https://docs.renovatebot.com/presets-config/#configjs-lib
     "config:js-lib",
 
     "github>StoryCut/renovate-config:org.json5",
     "github>StoryCut/renovate-config:js-base.json5",
-  ],
-
-  packageRules: [
-    /* ******************************************************
-     * SECTION: automerge, schedule and priority
-     ****************************************************** */
-
-    {
-      // Any plumbing-type update
-      matchUpdateTypes: ["pin", "digest"],
-
-      // Auto-merge these updates
-      automerge: true,
-
-      // Allow them to happen any time
-
-      // These are highest priority because they're the safest auto-merged updates
-      prPriority: 3,
-    },
-
-    {
-      // Any dependency (non-major)
-      matchUpdateTypes: ["minor", "patch"],
-
-      // Auto-merge these updates
-      automerge: true,
-
-      // Eventually we can limit these updates to happen overnight
-      // See NOTE(runAllDay)
-      // schedule: ["after 8pm", "before 7am"],
-
-      // These are high priority because they're quite safe auto-merged updates
-      prPriority: 2,
-    },
-
-    {
-      // Dev dependencies (major)
-      matchDepTypes: ["devDependencies"],
-      matchUpdateTypes: ["major"],
-
-      // Auto-merge these updates
-      automerge: true,
-
-      // Eventually we can limit these updates to happen overnight
-      // See NOTE(runAllDay)
-      // schedule: ["after 8pm", "before 7am"],
-
-      // These are medium priority because they're nearly-safe auto-merged updates
-      prPriority: 1,
-    },
-
-    {
-      // Dependencies (major)
-      matchDepTypes: ["dependencies"],
-      matchUpdateTypes: ["major"],
-
-      // Do not auto-merge these updates
-      automerge: false,
-
-      // Allow them to happen any time
-
-      // These are low priority because they are not auto-merged.
-      // Since they'll require human approval and we're only allowing 1 PR at a time,
-      // these should not block the overnight updates from auto-merging.
-      // Why -1? This ensures that any other unspecified priority PRs will come first.
-      prPriority: -1,
-    },
-
-    {
-      // Lockfile maintenance
-      matchUpdateTypes: ["lockFileMaintenance"],
-
-      // Auto-merge these updates
-      automerge: true,
-
-      // Limit these updates to happen overnight
-      // They can be run without human intervention, so why waste CI resources during working hours?
-      // However, don't overlap with other types of updates or they may never get prioritized
-      // Run them after the other nightly updates
-      // Run these at most a few times weekly because they can be pretty noisy
-      // We need at least a 4 hour window, since Renovate only runs every ~3-4 hours
-      schedule: [
-        "after 5am and before 9am on monday",
-        "after 5am and before 9am on thursday",
-        "after 5am and before 9am on saturday",
-      ],
-
-      // These are the lowest priority updates,
-      // because if they fail CI they'll be hard to fix
-      prPriority: -2,
-    },
-
-    /* ******************************************************
-     * SECTION: minimumReleaseAge
-     ****************************************************** */
-
-    // Base configuration for minimumReleaseAge
-    {
-      // Any non-plumbing type update
-      matchUpdateTypes: ["major", "minor", "patch"],
-
-      // Create PRs after at least 3 days has passed, since npm packages can be un-published within 72 hours
-      minimumReleaseAge: "3 days",
-    },
-
-    {
-      // Dependencies (minor)
-      matchDepTypes: ["dependencies"],
-      matchUpdateTypes: ["minor"],
-
-      // Wait a medium number of days before creating the PRs
-      minimumReleaseAge: "5 days",
-    },
-
-    {
-      // Dependencies (major)
-      matchDepTypes: ["dependencies"],
-      matchUpdateTypes: ["major"],
-
-      // Wait a good long number of days before creating the PRs
-      minimumReleaseAge: "8 days",
-    },
   ],
 }
