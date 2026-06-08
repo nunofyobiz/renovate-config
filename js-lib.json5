@@ -18,4 +18,23 @@
     "github>nunofyobiz/renovate-config:org.json5",
     "github>nunofyobiz/renovate-config:js-base.json5",
   ],
+
+  packageRules: [
+    /* ******************************************************
+     * SECTION: engines are floors, not pins
+     * A library's `engines.node` is a public contract — the runtime range its consumers must
+     * satisfy — so it's a deliberate floor, not a dependency to track. A repo-level
+     * `rangeStrategy: "pin"` would pin it to the latest release, silently raising the support floor
+     * and making pnpm throw ERR_PNPM_UNSUPPORTED_ENGINE when the running node can't satisfy the
+     * pinned value. Never let Renovate touch engines; the floor moves by hand. `enabled: false`
+     * (not a `rangeStrategy`) so a downstream repo-level `pin` rule can't re-enable it. This lives
+     * in js-lib (not js-base) because engines floors are a library concern — apps don't declare
+     * `engines.node`, so js-app just uses Renovate's defaults. The package-manager version is pinned
+     * only in `packageManager` (still Renovate-managed) — there is deliberately no `engines.pnpm`.
+     ****************************************************** */
+    {
+      matchDepTypes: ["engines"],
+      enabled: false,
+    },
+  ],
 }
