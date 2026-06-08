@@ -15,7 +15,7 @@
     // See https://docs.renovatebot.com/presets-config/#configjs-lib
     "config:js-lib",
 
-    "github>StoryCut/renovate-config:org.json5",
-    "github>StoryCut/renovate-config:js-base.json5",
+    "github>nunofyobiz/renovate-config:org.json5",
+    "github>nunofyobiz/renovate-config:js-base.json5",
   ],
 }

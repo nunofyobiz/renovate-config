@@ -1,8 +1,8 @@
-# StoryCut/renovate-config
+# nunofyobiz/renovate-config
 
 Renovate configurations for this organization
 
-[![CI](https://github.com/StoryCut/renovate-config/actions/workflows/ci.yml/badge.svg)](https://github.com/StoryCut/renovate-config/actions/workflows/ci.yml)
+[![CI](https://github.com/nunofyobiz/renovate-config/actions/workflows/ci.yml/badge.svg)](https://github.com/nunofyobiz/renovate-config/actions/workflows/ci.yml)
 
 
 # Local setup
