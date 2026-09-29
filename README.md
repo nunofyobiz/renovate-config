@@ -5,6 +5,21 @@ Renovate configurations for this organization
 [![CI](https://github.com/nunofyobiz/renovate-config/actions/workflows/ci.yml/badge.svg)](https://github.com/nunofyobiz/renovate-config/actions/workflows/ci.yml)
 
 
+# Using these presets
+
+Extend a preset from a consuming repo's Renovate config:
+
+```json5
+{
+  extends: ["github>nunofyobiz/renovate-config:js-lib.json5"],
+}
+```
+
+Available presets: `default.json5` (onboarding default), `js-app.json5`, `js-lib.json5`,
+`js-base.json5` (shared JS rules, not meant to be extended directly), `org.json5` (org-wide settings,
+not meant to be extended directly), `neon-local-postgres.json5` (opt-in add-on).
+
+
 # Local setup
 
 A [pre-commit](https://pre-commit.com/) hook validates every `*.json5` config before
@@ -24,15 +39,15 @@ pre-commit run --all-files
 # Agent commit signing
 
 `main` requires signed commits. When you run an agent (Claude Code, etc.) inside a
-`claude/*` worktree, `scripts/setup-claude-worktree-git.sh` configures a per-worktree
-identity that signs the agent's commits with a dedicated SSH key, authored as
+`claude/*` or `agent/*` worktree, `scripts/setup-claude-worktree-git.sh` configures a
+per-worktree identity that signs the agent's commits with a dedicated SSH key, authored as
 `Claude Code (<you>)` — without touching your personal git config on other branches.
 
 The one-time per-machine setup (SSH signing key, `~/.gitconfig.claude`, registering the
 key on GitHub) is shared with our other repos and documented in StoryCut's guide:
 <https://github.com/StoryCut/StoryCut/blob/main/docs/dev-guides/agents-signing.md>
 
-Once that's done, run the script in a `claude/*` worktree to apply it:
+Once that's done, run the script in a `claude/*` or `agent/*` worktree to apply it:
 ```bash
 ./scripts/setup-claude-worktree-git.sh
 ```
@@ -40,9 +55,9 @@ Once that's done, run the script in a `claude/*` worktree to apply it:
 
 # Commands
 
-## Validate a config locally
+## Validate configs locally
 
-For a specific config file, eg. `js-lib.json5`:
+Validate every `*.json5` config, the same way CI does:
 ```bash
-npx --yes --package renovate -- renovate-config-validator js-lib.json5
+bash scripts/validate-renovate-configs.sh
 ```
